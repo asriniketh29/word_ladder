@@ -1,5 +1,6 @@
 #!/bin/python3
 
+from collections import deque
 
 def word_ladder(start_word, end_word, dictionary_file='words5.dict'):
     '''
@@ -31,6 +32,25 @@ def word_ladder(start_word, end_word, dictionary_file='words5.dict'):
     HINT:
     See <https://github.com/mikeizbicki/cmc-csci046/issues/472> for a discussion about a common memory management bug that causes the generated word ladders to be too long in some cases.
     '''
+    if start_word == end_word:
+        return [start_word]
+    with open(dictionary_file, 'r') as f:
+        dictionary = set(line.strip() for line in f)
+    stack = [start_word]
+    queue = deque()
+    queue.append(stack)
+    while queue:
+        current_stack = queue.popleft()
+        top_word = current_stack[-1]
+        for word in list(dictionary):
+            if _adjacent(top_word, word):
+                if word == end_word:
+                    return current_stack + [word]
+                stack_copy = current_stack.copy()
+                stack_copy.append(word)
+                queue.append(stack_copy)
+                dictionary.remove(word)
+    return None
 
 
 def verify_word_ladder(ladder):
@@ -43,6 +63,14 @@ def verify_word_ladder(ladder):
     >>> verify_word_ladder(['stone', 'shone', 'phony'])
     False
     '''
+    if ladder is None:
+        return False
+    if len(ladder) == 0:
+        return False
+    for i in range(len(ladder)-1):
+        if not _adjacent(ladder[i], ladder[i+1]):
+            return False
+    return True
 
 
 def _adjacent(word1, word2):
@@ -55,3 +83,13 @@ def _adjacent(word1, word2):
     >>> _adjacent('stone','money')
     False
     '''
+    count = 0
+    if len(word1) != len(word2):
+        return False
+    for i in range(len(word1)):
+        if  word1[i] != word2[i]:
+            count += 1
+    if count == 1:
+        return True
+    else:
+        return False
