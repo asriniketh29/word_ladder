@@ -2,6 +2,7 @@
 
 from collections import deque
 
+
 def word_ladder(start_word, end_word, dictionary_file='words5.dict'):
     '''
     Returns a list satisfying the following properties:
@@ -67,8 +68,8 @@ def verify_word_ladder(ladder):
         return False
     if len(ladder) == 0:
         return False
-    for i in range(len(ladder)-1):
-        if not _adjacent(ladder[i], ladder[i+1]):
+    for i in range(len(ladder) - 1):
+        if not _adjacent(ladder[i], ladder[i + 1]):
             return False
     return True
 
@@ -87,7 +88,7 @@ def _adjacent(word1, word2):
     if len(word1) != len(word2):
         return False
     for i in range(len(word1)):
-        if  word1[i] != word2[i]:
+        if word1[i] != word2[i]:
             count += 1
     if count == 1:
         return True
